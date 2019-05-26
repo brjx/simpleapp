@@ -10,4 +10,5 @@ subsets:
     ports:
       -
         name: "https"
+        protocol: TCP
         port: 443
