@@ -2,7 +2,6 @@ package wtf.brzhk.simpleapp;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -17,8 +16,11 @@ import static java.util.Collections.singletonMap;
 @Controller
 public class DemoApplication {
 
-    @Autowired
-    private MeterRegistry registry;
+    private final MeterRegistry registry;
+
+    public DemoApplication(MeterRegistry registry) {
+        this.registry = registry;
+    }
 
     @GetMapping(path = "/", produces = "application/json")
     @ResponseBody
