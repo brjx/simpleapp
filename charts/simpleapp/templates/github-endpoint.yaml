@@ -9,8 +9,5 @@ subsets:
       - ip: "140.82.118.4"
     ports:
       -
-        name: "http"
-        port: 80
-      -
         name: "https"
         port: 443
