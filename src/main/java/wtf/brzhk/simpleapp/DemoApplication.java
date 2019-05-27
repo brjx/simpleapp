@@ -26,7 +26,7 @@ public class DemoApplication {
     @ResponseBody
     public Map<String, Object> landingPage() {
         Counter.builder("mymetric").tag("foo", "bar").register(registry).increment();
-        return singletonMap("hello", "world");
+        return singletonMap("hello", "C4!=");
     }
 
     public static void main(String[] args) {
