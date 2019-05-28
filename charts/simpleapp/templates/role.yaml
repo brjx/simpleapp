@@ -17,3 +17,13 @@ rules:
           - get
           - list
           - watch
+    - apiGroups:
+          - extensions
+          - apps
+      resources:
+          - deployments
+          - replicasets
+      verbs:
+          - get
+          - list
+          - watch
