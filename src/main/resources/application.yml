@@ -1,5 +1,7 @@
-
 management:
+  endpoint:
+    restart:
+      enabled: true
   endpoints:
     web:
       exposure:
