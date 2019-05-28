@@ -9,10 +9,6 @@ image:
 
 # define environment variables here as a map of key: value
 env:
-  - name: "KUBERNETES_NAMESPACE"
-    valueFrom:
-      fieldRef:
-        fieldPath: "metadata.namespace"
 
 # enable this flag to use knative serve to deploy the app
 knativeDeploy: false
