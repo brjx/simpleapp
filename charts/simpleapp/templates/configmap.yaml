@@ -1,11 +1,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-{{- if .Values.service.name }}
-  name: {{ .Values.service.name }}
-{{- else }}
-  name: {{ template "fullname" . }}
-{{- end }}
+  name: simpleapp
 data:
   application.yml: |-
     spring:
