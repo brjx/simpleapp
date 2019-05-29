@@ -6,7 +6,7 @@ metadata:
   name: {{ template "simpleapp.fullname" . }}
   labels:
     draft: {{ default "draft-app" .Values.draft }}
-    app: {{ template "simpleapp.name" . }}
+    app: {{ template "simpleapp.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -15,6 +15,7 @@ spec:
       labels:
         draft: {{ default "draft-app" .Values.draft }}
         app: {{ template "simpleapp.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 {{- if .Values.podAnnotations }}
       annotations:
 {{ toYaml .Values.podAnnotations | indent 8 }}
@@ -29,6 +30,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: "metadata.namespace"
+        - name: SPRING_CLOUD_KUBERNETES_CONFIG_NAME
+          value: {{ template "simpleapp.fullname" . }}-config
 {{- range $pkey, $pval := .Values.env }}
         - name: {{ $pkey }}
           value: {{ $pval }}
