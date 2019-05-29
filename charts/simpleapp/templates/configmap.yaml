@@ -7,3 +7,8 @@ data:
     spring:
       application:
         name: {{ template "simpleapp.name" . }}
+    logging:
+      level:
+        root: INFO
+        org.springframework.cloud.kubernetes: DEBUG
+        org.springframework.boot.actuate: DEBUG
