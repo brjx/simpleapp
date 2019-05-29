@@ -17,13 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
 
 @SpringBootApplication
@@ -57,15 +53,16 @@ public class DemoApplication {
             details.put("serviceAccount", current.getSpec().getServiceAccountName());
             details.put("nodeName", current.getSpec().getNodeName());
             details.put("hostIp", current.getStatus().getHostIP());
-            current.getMetadata().getAnnotations()
-                    .entrySet().forEach(stringStringEntry -> {
-                details.put("annotation: " + stringStringEntry.getKey(),
-                        stringStringEntry.getValue());
-            });
-            current.getMetadata().getLabels()
-                    .entrySet().forEach(stringStringEntry -> {
-                details.put("label: " + stringStringEntry.getKey(), stringStringEntry.getValue());
-            });
+            if (current.getMetadata() != null) {
+                if (current.getMetadata().getAnnotations() != null) {
+                    current.getMetadata().getAnnotations()
+                            .forEach((key, value) -> details.put("annotation: " + key, value));
+                }
+                if (current.getMetadata().getLabels() != null) {
+                    current.getMetadata().getLabels()
+                            .forEach((key, value) -> details.put("label: " + key, value));
+                }
+            }
         } else {
             details.put("inside", false);
         }
