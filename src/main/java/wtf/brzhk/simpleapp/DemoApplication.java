@@ -24,6 +24,7 @@ import static java.util.Collections.unmodifiableMap;
 @Controller
 @EnableScheduling
 @EnableDiscoveryClient
+@Timed()
 public class DemoApplication {
 
     private final MeterRegistry registry;
@@ -37,7 +38,6 @@ public class DemoApplication {
     }
 
     @GetMapping(path = "/", produces = "application/json")
-    @Timed(value = "root")
     @ResponseBody
     public Map<String, Object> landingPage() {
         Counter.builder("mymetric").tag("foo", "bar").register(registry).increment();
@@ -59,7 +59,6 @@ public class DemoApplication {
     }
 
     @GetMapping(path = "/services", produces = "application/json")
-    @Timed(value = "services")
     @ResponseBody
     public Map<String, Object> services() {
         return singletonMap("services", this.discoveryClient.getServices());
