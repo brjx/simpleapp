@@ -6,4 +6,4 @@ data:
   application.yml: |-
     spring:
       application:
-        name: {{ template "simpleapp.name" . }}-config
+        name: {{ template "simpleapp.name" . }}
