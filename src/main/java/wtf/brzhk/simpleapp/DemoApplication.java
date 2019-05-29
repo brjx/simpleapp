@@ -6,6 +6,7 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.kubernetes.PodUtils;
@@ -14,8 +15,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
@@ -51,8 +57,16 @@ public class DemoApplication {
             details.put("serviceAccount", current.getSpec().getServiceAccountName());
             details.put("nodeName", current.getSpec().getNodeName());
             details.put("hostIp", current.getStatus().getHostIP());
-        }
-        else {
+            current.getMetadata().getAnnotations()
+                    .entrySet().forEach(stringStringEntry -> {
+                details.put("annotation: " + stringStringEntry.getKey(),
+                        stringStringEntry.getValue());
+            });
+            current.getMetadata().getLabels()
+                    .entrySet().forEach(stringStringEntry -> {
+                details.put("label: " + stringStringEntry.getKey(), stringStringEntry.getValue());
+            });
+        } else {
             details.put("inside", false);
         }
         return unmodifiableMap(details);
@@ -60,8 +74,9 @@ public class DemoApplication {
 
     @GetMapping(path = "/services", produces = "application/json")
     @ResponseBody
-    public Map<String, Object> services() {
-        return singletonMap("services", this.discoveryClient.getServices());
+    public Map<String, String> services() {
+        return discoveryClient.getServices().stream().map(s -> discoveryClient.getInstances(s)).flatMap(Collection::stream)
+                .collect(Collectors.toList()).stream().collect(Collectors.toMap(o -> o.getUri().toString(), ServiceInstance::getServiceId));
     }
 
     public static void main(String[] args) {
