@@ -2,16 +2,10 @@ management:
   endpoint:
     restart:
       enabled: true
-    configprops:
-      enabled: true
-    env:
-      enabled: true
-    health:
-      show-details: always
   endpoints:
     web:
       exposure:
-        include: prometheus,health,info,restart,configprops,env
+        include: prometheus,health,info,restart
       base-path: /
       path-mapping:
         prometheus: metrics
