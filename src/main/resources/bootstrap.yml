@@ -1,8 +1,8 @@
 spring:
-  application:
-    name: simpleapp
   cloud:
     kubernetes:
+      config:
+        name: simpleapp
       reload:
         enabled: true
         strategy: restart_context
