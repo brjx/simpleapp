@@ -3,12 +3,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "simpleapp.name" . }}
+  name: {{ template "simpleappjx .name" . }}
   labels:
     draft: {{ default "draft-app" .Values.draft }}
     app: {{ template "simpleapp.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
+  selector:
+    matchLabels:
+      draft: {{ default "draft-app" .Values.draft }}
+      app: {{ template "simpleapp.fullname" . }}
+      chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
