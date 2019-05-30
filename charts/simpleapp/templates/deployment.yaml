@@ -1,9 +1,9 @@
 {{- if .Values.knativeDeploy }}
 {{- else }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "simpleapp.fullname" . }}
+  name: {{ template "simpleapp.name" . }}
   labels:
     draft: {{ default "draft-app" .Values.draft }}
     app: {{ template "simpleapp.fullname" . }}
