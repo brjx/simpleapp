@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "simpleappjx .name" . }}
+  name: {{ template "simpleapp.name" . }}
   labels:
     draft: {{ default "draft-app" .Values.draft }}
     app: {{ template "simpleapp.fullname" . }}
