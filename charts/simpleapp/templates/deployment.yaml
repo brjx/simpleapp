@@ -1,19 +1,26 @@
 {{- if .Values.knativeDeploy }}
 {{- else }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "simpleapp.name" . }}
   labels:
     draft: {{ default "draft-app" .Values.draft }}
+    app: {{ template "simpleapp.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
+  selector:
+    matchLabels:
+      draft: {{ default "draft-app" .Values.draft }}
+      app: {{ template "simpleapp.fullname" . }}
+      chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
         draft: {{ default "draft-app" .Values.draft }}
-        app: {{ template "fullname" . }}
+        app: {{ template "simpleapp.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 {{- if .Values.podAnnotations }}
       annotations:
 {{ toYaml .Values.podAnnotations | indent 8 }}
@@ -24,6 +31,12 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
+        - name: "KUBERNETES_NAMESPACE"
+          valueFrom:
+            fieldRef:
+              fieldPath: "metadata.namespace"
+        - name: SPRING_CLOUD_KUBERNETES_CONFIG_NAME
+          value: {{ template "simpleapp.fullname" . }}-config
 {{- range $pkey, $pval := .Values.env }}
         - name: {{ $pkey }}
           value: {{ $pval }}
@@ -48,4 +61,5 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 12 }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      serviceAccountName: {{ .Chart.Name }}
 {{- end }}

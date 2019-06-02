@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "simpleapp.fullname" . }}-config
+data:
+  application.yml: |-
+    spring:
+      application:
+        name: {{ template "simpleapp.name" . }}
+    logging:
+      level:
+        root: INFO
+        org.springframework.cloud.kubernetes: DEBUG
+        org.springframework.boot.actuate: DEBUG
